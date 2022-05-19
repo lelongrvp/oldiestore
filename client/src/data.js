@@ -27,16 +27,19 @@ export const categories = [
         id: 1,
         img: "https://images.pexels.com/photos/1670977/pexels-photo-1670977.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260",
         title: "VIDEO GAMES",
+        cat: "games"
     },
     {
         id: 2,
         img: "https://images.pexels.com/photos/139038/pexels-photo-139038.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260",
         title: "CONSOLES",
+        cat: "consoles"
     },
     {
         id: 3,
         img: "https://images.pexels.com/photos/163036/mario-luigi-yoschi-figures-163036.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260",
         title: "MERCHANDISE",
+        cat: "merc"
     }
 ]
 

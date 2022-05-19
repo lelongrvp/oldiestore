@@ -5,6 +5,8 @@ import Products from "../components/Products";
 import Newsletter from "../components/Newsletter";
 import Footer from "../components/Footer";
 import { mobile } from "../responsive";
+import { useLocation } from "react-router-dom";
+import { useState } from "react";
 
 const Container = styled.div``;
 
@@ -41,6 +43,19 @@ const Select = styled.select`
 const Option = styled.option``;
 
 const ProductList = () => {
+  const location = useLocation();
+  const cat = location.pathname.split("/")[2];
+  const {filters, setFilters} = useState({});
+  const handleFilters = (e) => {
+    const value = e.target.value;
+    setFilters({
+      ...filters,
+      [e.target.name]: value,
+    })
+  }
+
+  console.log(filters)
+
   return (
       <Container>
           <Navbar/>
@@ -48,8 +63,8 @@ const ProductList = () => {
             <Title>Video Games</Title>
           <FilterContainer>
               <Filter><FilterText>Filter:</FilterText></Filter>
-              <Select>
-                  <Option disabled selected>Platform</Option>
+              <Select name="platform" onChange={handleFilters}>
+                  <Option disabled>Platform</Option>
                   <Option>PC (via Steam)</Option>
                   <Option>PlayStation 5</Option>
                   <Option>PlayStation 4</Option>
@@ -57,8 +72,8 @@ const ProductList = () => {
                   <Option>Xbox Series X</Option>
                   <Option>Nintendo Switch</Option>
               </Select>
-              <Select>
-                  <Option disabled selected>Genre</Option>
+              <Select name="genre" onChange={handleFilters}>
+                  <Option disabled>Genre</Option>
                   <Option>Action</Option>
                   <Option>Action-Adventure</Option>
                   <Option>Casual</Option>
@@ -68,7 +83,7 @@ const ProductList = () => {
               </Select>
               <Filter><FilterText>Sort:</FilterText></Filter>
               <Select>
-                  <Option selected>Recent</Option>
+                  <Option>Recent</Option>
                   <Option>Price (low to high)</Option>
                   <Option>Price (high to low)</Option>
               </Select>
@@ -80,4 +95,4 @@ const ProductList = () => {
   )
 }
 
-export default ProductList
+export default ProductList;
