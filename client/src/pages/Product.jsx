@@ -1,9 +1,12 @@
 import { Add, Remove } from "@material-ui/icons";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import Announcement from "../components/Announcement";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import Newsletter from "../components/Newsletter";
+import { publicRequest } from "../requestMethod";
 import { mobile } from "../responsive";
 
 const Container = styled.div``;
@@ -34,6 +37,7 @@ const InfoContainer = styled.div`
 `;
 
 const Title = styled.h1`
+    color: black;
     font-size: 80px;
     font-weight: 500;
     ${mobile({fontSize:"30px"})}
@@ -131,33 +135,51 @@ const Button = styled.button`
 `;
 
 const Product = () => {
+    const location = useLocation();
+    const id = location.pathname.split("/")[2];
+    const [product,setProduct] = useState({});
+    const [version, setVersion] = useState("");
+    const [method, setMethod] = useState("");
+
+    useEffect(()=>{
+        const getProduct = async ()=>{
+            try{
+                const res = await publicRequest.get("/products/find/" + id)
+                setProduct(res.data);
+            } catch{}
+        };
+        getProduct()
+    }, [id]);
+    
+    const handleClick =()=>{
+        
+    }
+
   return (
       <Container>
           <Navbar/>
           <Announcement/>
           <Wrapper>
               <ImgContainer>
-              <Image src="https://cdn.cloudflare.steamstatic.com/steam/apps/1091500/header.jpg?t=1649065890"/>
+              <Image src={product.img}/>
               </ImgContainer>
               <InfoContainer>
-                  <Title>Cyberpunk 2077</Title>
-                  <Desc>Cyberpunk 2077 is an open-world, action-adventure RPG
-                       set in the dark future of Night City — a dangerous
-                        megalopolis obsessed with power, glamor, and ceaseless body
-                         modification.</Desc>
-                  <Price>$49.99</Price>
+                  <Title>{product.title}</Title>
+                  <Desc>{product.desc}</Desc>
+                  <Price>${product.price}</Price>
                   <FilterContainer>
                       <Filter>
                         <FilterTitle>Version</FilterTitle>
-                        <FilterVersion>Standard Edition</FilterVersion>
-                        <FilterVersion>Deluxe Edition</FilterVersion>
-                        <FilterVersion>Collector's Edition</FilterVersion>
+                        {product.version?.map((v) => (
+                        <FilterVersion version={v} key={v} onClick={(e) => setVersion(version)} />
+                        ))}
                       </Filter>
                       <Filter>
                         <FilterTitle>Receive Method</FilterTitle>
-                        <FilterMethod>
-                            <FilterMethodOption>Gift</FilterMethodOption>
-                            <FilterMethodOption>Code</FilterMethodOption>
+                        <FilterMethod onChange={(e) => setMethod(e.target.value)}>
+                            {product.method?.map((m) => (
+                                <FilterMethodOption key={m}>{m}</FilterMethodOption>
+                            ))}
                         </FilterMethod>
                       </Filter>
                   </FilterContainer>
@@ -167,7 +189,7 @@ const Product = () => {
                           <Amount>1</Amount>
                           <Add/>
                       </AmountContainer>
-                      <Button>ADD TO CART</Button>
+                      <Button onClick={handleClick}>ADD TO CART</Button>
                   </AddContainer>
               </InfoContainer>
           </Wrapper>

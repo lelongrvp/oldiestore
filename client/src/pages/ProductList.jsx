@@ -45,7 +45,9 @@ const Option = styled.option``;
 const ProductList = () => {
   const location = useLocation();
   const cat = location.pathname.split("/")[2];
-  const {filters, setFilters} = useState({});
+  const [filters, setFilters] = useState({});
+  const [sort, setSort] = useState("newest");
+
   const handleFilters = (e) => {
     const value = e.target.value;
     setFilters({
@@ -54,18 +56,16 @@ const ProductList = () => {
     })
   }
 
-  console.log(filters)
-
   return (
       <Container>
           <Navbar/>
           <Announcement/>
-            <Title>Video Games</Title>
+            <Title>{cat}</Title>
           <FilterContainer>
               <Filter><FilterText>Filter:</FilterText></Filter>
               <Select name="platform" onChange={handleFilters}>
                   <Option disabled>Platform</Option>
-                  <Option>PC (via Steam)</Option>
+                  <Option>PC</Option>
                   <Option>PlayStation 5</Option>
                   <Option>PlayStation 4</Option>
                   <Option>Xbox One</Option>
@@ -82,13 +82,13 @@ const ProductList = () => {
                   <Option>Sport</Option>
               </Select>
               <Filter><FilterText>Sort:</FilterText></Filter>
-              <Select>
-                  <Option>Recent</Option>
-                  <Option>Price (low to high)</Option>
-                  <Option>Price (high to low)</Option>
+              <Select onChange={e=>setSort(e.target.value)}>
+                  <Option value="recent">Recent</Option>
+                  <Option value="asc">Price (low to high)</Option>
+                  <Option value="desc">Price (high to low)</Option>
               </Select>
           </FilterContainer>
-          <Products/>
+          <Products cat={cat} filters={filters} sort={sort}/>
           <Newsletter/>
           <Footer/>
       </Container>

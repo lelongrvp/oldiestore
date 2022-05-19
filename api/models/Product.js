@@ -6,8 +6,8 @@ const mongoose = require("mongoose");
  * - Description: String, required
  * - Image: String, required
  * - Category: Array
- * - Version: String, required
- * - Method: String, required
+ * - Version: Array, required
+ * - Method: Array, required
  * - Price: Number, required
  */
 const ProductSchema = new mongoose.Schema(
@@ -15,9 +15,9 @@ const ProductSchema = new mongoose.Schema(
         title:{type:String, required:true, unique:true},
         desc:{type:String, required:true},
         img:{type:String, required:true},
-        category:{type:Array},
-        version:{type: Array, required: true},
-        method:{type: Array, required: true},
+        cat:{type:Array},
+        version:{type: Array},
+        method:{type: Array},
         price:{type: Number, required: true},
         inStock:{type: Boolean, default: true}
     },
