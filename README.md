@@ -24,6 +24,6 @@
 
 ```
     cd ./client
-    yarn instart
-    yarn start
+    npm install
+    npm run dev
 ```
