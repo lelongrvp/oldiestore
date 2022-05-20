@@ -6,8 +6,10 @@ import Announcement from "../components/Announcement";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import Newsletter from "../components/Newsletter";
+import { addProduct } from "../redux/cartRedux";
 import { publicRequest } from "../requestMethod";
 import { mobile } from "../responsive";
+import {useDispatch} from "react-redux"
 
 const Container = styled.div``;
 
@@ -140,6 +142,8 @@ const Product = () => {
     const [product,setProduct] = useState({});
     const [version, setVersion] = useState("");
     const [method, setMethod] = useState("");
+    const [quantity, setQuantity] = useState(1);
+    const dispatch = useDispatch();
 
     useEffect(()=>{
         const getProduct = async ()=>{
@@ -151,9 +155,19 @@ const Product = () => {
         getProduct()
     }, [id]);
     
-    const handleClick =()=>{
-        
-    }
+    const handleQuantity = (type) =>{
+        if(type === "dec"){
+          quantity > 1 && setQuantity(quantity-1)
+        } else {
+          setQuantity(quantity+1)
+        }
+      }
+
+    const handleClick = () => {
+       dispatch(
+        addProduct({...product, quantity, version, method})
+       )
+    };
 
   return (
       <Container>
@@ -171,7 +185,7 @@ const Product = () => {
                       <Filter>
                         <FilterTitle>Version</FilterTitle>
                         {product.version?.map((v) => (
-                        <FilterVersion version={v} key={v} onClick={(e) => setVersion(version)} />
+                        <FilterVersion version={v} key={v} onClick={(e) => setVersion(v)} />
                         ))}
                       </Filter>
                       <Filter>
@@ -185,9 +199,9 @@ const Product = () => {
                   </FilterContainer>
                   <AddContainer>
                       <AmountContainer>
-                          <Remove/>
-                          <Amount>1</Amount>
-                          <Add/>
+                          <Remove onClick={()=>handleQuantity("dec")}/>
+                          <Amount>{quantity}</Amount>
+                          <Add onClick={()=>handleQuantity("inc")}/>
                       </AmountContainer>
                       <Button onClick={handleClick}>ADD TO CART</Button>
                   </AddContainer>
