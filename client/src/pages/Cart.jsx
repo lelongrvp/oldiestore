@@ -10,7 +10,6 @@ import { useState } from "react";
 import { useEffect } from "react";
 import {userRequest} from "../requestMethod";
 import { useNavigate } from "react-router-dom";
-
 const KEY = process.env.REACT_APP_STRIPE;
 
 const Container = styled.div``;
@@ -189,7 +188,7 @@ const Cart = () => {
             <Wrapper>
                 <Title>YOUR CART</Title>
                 <Top>
-                    <TopButton>CONTINUE SHOPPING</TopButton>
+                    <TopButton >CONTINUE SHOPPING</TopButton>
                     <TopTexts>
                         <TopText>Shopping cart(2)</TopText>
                         <TopText>Wishlist(0)</TopText>
