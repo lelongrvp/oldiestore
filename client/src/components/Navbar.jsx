@@ -4,6 +4,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { mobile } from "../responsive";
 import {useSelector} from "react-redux"
+import { Link } from "react-router-dom";
 
 const Container = styled.div`
   height: 60px;
@@ -84,15 +85,19 @@ const Navbar = () => {
               <Search style={{color:"gray", fontSize:16}}/>
             </SearchContainer>
           </Left>
+          <Link to="/">
           <Center><Logo>.POOCHSWADGE.</Logo></Center>
+          </Link>
           <Right>
             <MenuItem>REGISTER</MenuItem>
             <MenuItem>LOGIN</MenuItem>
+            <Link to="/cart">
             <MenuItem>
               <Badge badgeContent={quantity} color="primary">
                 <ShoppingCartOutlined/>
               </Badge>
-            </MenuItem>  
+            </MenuItem>
+            </Link>  
           </Right>  
         </Wrapper>    
     </Container>

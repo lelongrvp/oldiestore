@@ -3,11 +3,14 @@ import styled from "styled-components"
 import Announcement from '../components/Announcement'
 import Footer from '../components/Footer'
 import Navbar from '../components/Navbar'
-import { mobile } from "../responsive";
+import { mobile } from "../responsive"
+import {useSelector} from "react-redux"
+import StripeCheckout from "react-stripe-checkout"
+import { useState } from "react";
 
-const Container = styled.div`
+const KEY = process.env.REACT_APP_STRIPE;
 
-`;
+const Container = styled.div``;
 
 const Wrapper = styled.div`
     padding: 20px;
@@ -155,6 +158,14 @@ const SummaryButton = styled.button`
 `;
 
 const Cart = () => {
+    const cart = useSelector(state=>state.cart)
+    const [stripeToken, setStripeToken] = useState(null)
+
+    const onToken = (token)=>{
+        setStripeToken(token);
+    }
+    console.log(stripeToken)
+
   return (
         <Container>
             <Navbar/>
@@ -171,105 +182,51 @@ const Cart = () => {
                 </Top>
                 <Bottom>
                     <Info>
-                        <Product>
+                        {cart.products.map((product)=>(<Product>
                             <ProductDetail>
-                                <Image src="https://cdn.cloudflare.steamstatic.com/steam/apps/1240440/header.jpg?t=1639025793"/>
+                                <Image src={product.img}/>
                                 <Details>
-                                    <ProductName><b>Name: </b>HALO Infinite</ProductName>
-                                    <ProductId><b>ID: </b>912381979831</ProductId>
-                                    <ProductVersion><b>Version: </b>Standard Edition</ProductVersion>
-                                    <ProductMethod><b>Method: </b>Code</ProductMethod>
+                                    <ProductName><b>Name: </b>{product.title}</ProductName>
+                                    <ProductId><b>ID: </b>{product._id}</ProductId>
+                                    <ProductVersion><b>Version: </b>{product.version}</ProductVersion>
+                                    <ProductMethod><b>Method: </b>{product.method}</ProductMethod>
                                 </Details>
                             </ProductDetail>
                             <PriceDetail>
                                 <ProductAmountContainer>
                                     <Add/>
-                                    <ProductAmount>1</ProductAmount>
+                                    <ProductAmount>{product.quantity}</ProductAmount>
                                     <Remove/>
                                 </ProductAmountContainer>
-                                <ProductPrice>$59.99</ProductPrice>
+                                <ProductPrice>${product.price*product.quantity}</ProductPrice>
                             </PriceDetail>
                         </Product>
+                        ))}
                         <Hr/>
-                        <Product>
-                            <ProductDetail>
-                                <Image src="https://cdn.cloudflare.steamstatic.com/steam/apps/292030/header.jpg?t=1646996408"/>
-                                <Details>
-                                    <ProductName><b>Name: </b>The Witcher 3: Wild Hunt</ProductName>
-                                    <ProductId><b>ID: </b>912381975131</ProductId>
-                                    <ProductVersion><b>Version: </b>Game of the Year Edition</ProductVersion>
-                                    <ProductMethod><b>Method: </b>Code</ProductMethod>
-                                </Details>
-                            </ProductDetail>
-                            <PriceDetail>
-                                <ProductAmountContainer>
-                                    <Add/>
-                                    <ProductAmount>1</ProductAmount>
-                                    <Remove/>
-                                </ProductAmountContainer>
-                                <ProductPrice>$49.99</ProductPrice>
-                            </PriceDetail>
-                        </Product>
-                        <Hr/>
-                        <Product>
-                            <ProductDetail>
-                                <Image src="https://media.direct.playstation.com/is/image/sierialto/PS5-digital-edition-front-with-dualsense?$Background_Large$"/>
-                                <Details>
-                                    <ProductName><b>Name: </b>PlayStation 5</ProductName>
-                                    <ProductId><b>ID: </b>912381985731</ProductId>
-                                    <ProductVersion><b>Version: </b>Digital Edition</ProductVersion>
-                                    <ProductMethod><b>Method: </b>Delivery</ProductMethod>
-                                </Details>
-                            </ProductDetail>
-                            <PriceDetail>
-                                <ProductAmountContainer>
-                                    <Add/>
-                                    <ProductAmount>1</ProductAmount>
-                                    <Remove/>
-                                </ProductAmountContainer>
-                                <ProductPrice>$399.99</ProductPrice>
-                            </PriceDetail>
-                        </Product>
-                        <Hr/>
-                        <Product>
-                            <ProductDetail>
-                                <Image src="https://assets.nintendo.com/image/upload/c_pad,f_auto,q_auto,w_768/ncom/en_US/switch/site-design-update/photo01?v=2022041922"/>
-                                <Details>
-                                    <ProductName><b>Name: </b>Nintendo Switch</ProductName>
-                                    <ProductId><b>ID: </b>912381213131</ProductId>
-                                    <ProductVersion><b>Version: </b>OLED</ProductVersion>
-                                    <ProductMethod><b>Method: </b>Delivery</ProductMethod>
-                                </Details>
-                            </ProductDetail>
-                            <PriceDetail>
-                                <ProductAmountContainer>
-                                    <Add/>
-                                    <ProductAmount>1</ProductAmount>
-                                    <Remove/>
-                                </ProductAmountContainer>
-                                <ProductPrice>$349.99</ProductPrice>
-                            </PriceDetail>
-                        </Product>
+                        
                     </Info>
                     <Summary>
                         <SummaryTitle>ORDER SUMMARY</SummaryTitle>
                         <SummaryItem>
                             <SummaryItemText>Subtotal</SummaryItemText>
-                            <SummaryItemPrice>$859.96</SummaryItemPrice>
-                        </SummaryItem>
-                        <SummaryItem>
-                            <SummaryItemText>Estimated Shipping</SummaryItemText>
-                            <SummaryItemPrice>$99.99</SummaryItemPrice>
-                        </SummaryItem>
-                        <SummaryItem>
-                            <SummaryItemText>Shipping Discount</SummaryItemText>
-                            <SummaryItemPrice>$29.99</SummaryItemPrice>
+                            <SummaryItemPrice>${cart.total}</SummaryItemPrice>
                         </SummaryItem>
                         <SummaryItem type="total">
                             <SummaryItemText type="total">Total</SummaryItemText>
-                            <SummaryItemPrice>$929.96</SummaryItemPrice>
+                            <SummaryItemPrice>${cart.total}</SummaryItemPrice>
                         </SummaryItem>
-                        <SummaryButton>CHECKOUT NOW</SummaryButton>
+                        <StripeCheckout 
+                            name="Poochswadge" 
+                            image="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Steam_icon_logo.svg/2048px-Steam_icon_logo.svg.png"
+                            billingAddress
+                            shippingAddress
+                            description={`Your total is $${cart.total}`}
+                            amount={cart.total*100}
+                            token={onToken}
+                            stripeKey={KEY}
+                        >
+                            <SummaryButton>CHECKOUT NOW</SummaryButton>
+                        </StripeCheckout>
                     </Summary>
                 </Bottom>
             </Wrapper>
