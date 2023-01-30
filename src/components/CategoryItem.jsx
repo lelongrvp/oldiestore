@@ -51,6 +51,11 @@ const Button = styled.button`
   ${mobile({ fontSize: "10px", padding: "15px" })}
 `;
 
+/**
+ * CategoryItem is a function that takes an item as a parameter and returns a Container component that
+ * contains an Image component and an Info component.
+ * @returns A function that returns a component.
+ */
 const CategoryItem = ({ item }) => {
   const navigate = useNavigate();
   return (

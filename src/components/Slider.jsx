@@ -82,6 +82,12 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
+/**
+ * The Slider component is a functional component that renders a container with an arrow component on
+ * the left and right, and a wrapper component that renders a slide component for each item in the
+ * sliderItem array.
+ * @returns A React component.
+ */
 const Slider = () => {
   const [slideIndex, setSlideIndex] = useState(0);
   const handleClick = (direction) => {
